@@ -2,8 +2,11 @@ export class Document {
   private _identifier: string;
 
   constructor(value: string) {
-    this._identifier = this.sanitizeIdentifier(value);
-    this.checkValidDocumentIdentifier();
+    const sanitizedValue = this.sanitizeIdentifier(value);
+    if (!this.isValidDocumentIdentifier(sanitizedValue)) {
+      throw new Error('Invalid document identifier.');
+    }
+    this._identifier = sanitizedValue;
   }
 
   get identifier() {
@@ -15,9 +18,11 @@ export class Document {
     return sanitizedValue;
   }
 
-  private checkValidDocumentIdentifier() {
-    if (!this._identifier.match(/^[\d]{11}$/)) {
-      throw new Error('A Document identifier must have 11 numeric digits.');
+  private isValidDocumentIdentifier(value: string) {
+    if (!value.match(/^[\d]{11}$/)) {
+      return false;
     }
+
+    return true;
   }
 }
