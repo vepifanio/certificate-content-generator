@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Certificate {
+  id          String    @id @default(uuid())
+  title       String
+  content     String
+  hours       Int
+  initialDate DateTime
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+
+  documents DocumentsOnCertificates[]
+
+  @@map("certificates")
+}
+
+model Document {
+  identifier String @id
+
+  certificates DocumentsOnCertificates[]
+
+  @@map("documents")
+}
+
+model DocumentsOnCertificates {
+  certificateId      String
+  documentIdentifier String
+
+  Certificate Certificate @relation(fields: [certificateId], references: [id])
+  Document    Document    @relation(fields: [documentIdentifier], references: [identifier])
+
+  @@id([certificateId, documentIdentifier])
+  @@map("documents_on_certificates")
+}
