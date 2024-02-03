@@ -1,16 +1,16 @@
 export class Document {
-  private _identifier: string;
+  private identifier: string;
 
   constructor(value: string) {
     const sanitizedValue = this.sanitizeIdentifier(value);
     if (!this.isValidDocumentIdentifier(sanitizedValue)) {
       throw new Error('Invalid document identifier.');
     }
-    this._identifier = sanitizedValue;
+    this.identifier = sanitizedValue;
   }
 
-  get identifier() {
-    return this._identifier;
+  getIdentifier() {
+    return this.identifier;
   }
 
   private sanitizeIdentifier(value: string) {
