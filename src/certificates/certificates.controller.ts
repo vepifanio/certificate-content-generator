@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CertificatesService } from './certificates.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
@@ -27,7 +28,22 @@ export class CertificatesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.certificatesService.findOne(+id);
+    return this.certificatesService.findOne(id);
+  }
+
+  @Get(':id/generate')
+  async generateOne(
+    @Param('id') id: string,
+    @Query() query: { [key: string]: string },
+  ) {
+    const generatedCertificateContent = await this.certificatesService.generate(
+      id,
+      query,
+    );
+
+    return {
+      content: generatedCertificateContent,
+    };
   }
 
   @Patch(':id')
@@ -35,7 +51,7 @@ export class CertificatesController {
     @Param('id') id: string,
     @Body() updateCertificateDto: UpdateCertificateDto,
   ) {
-    return this.certificatesService.update(+id, updateCertificateDto);
+    return this.certificatesService.update(id, updateCertificateDto);
   }
 
   @Delete(':id')
