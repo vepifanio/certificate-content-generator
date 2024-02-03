@@ -71,15 +71,19 @@ export class Certificate {
   ): string {
     const contentTextResolved = Object.keys(contentVariables).reduce(
       (text, key) => {
-        return text.replace(`{{${key}}}`, String(contentVariables[key]));
+        return text.replace(`[[${key}]]`, String(contentVariables[key]));
       },
       this.content,
     );
 
-    const remainingVariables = contentTextResolved.match(/{{(\w+)}}/gim);
+    const remainingVariables = contentTextResolved.match(/\[\[(\w+)]]/gim);
 
     if (remainingVariables) {
-      const errorText = `Some required content variables are undefined: ${remainingVariables.join(', ')}`;
+      const formattedRemainingVariables = remainingVariables.map((variable) =>
+        variable.replaceAll(/\[|]/g, ''),
+      );
+
+      const errorText = `Some required content variables are undefined: ${formattedRemainingVariables.join(', ')}`;
 
       throw new Error(errorText);
     }
