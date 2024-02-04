@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Document } from './document.entity';
 
 export class Certificate {
   constructor(
@@ -8,6 +9,7 @@ export class Certificate {
     private initialDate: Date,
     private endDate: Date | undefined,
     private hours: number,
+    private documents: Document[],
     private createdAt: Date,
     private updatedAt: Date,
   ) {}
@@ -22,6 +24,8 @@ export class Certificate {
     const id = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();
+    const documents: Document[] = [];
+
     return new Certificate(
       id,
       title,
@@ -29,6 +33,7 @@ export class Certificate {
       initialDate,
       endDate,
       hours,
+      documents,
       createdAt,
       updatedAt,
     );
@@ -56,6 +61,10 @@ export class Certificate {
 
   getHours() {
     return this.hours;
+  }
+
+  getDocuments() {
+    return this.documents;
   }
 
   getCreatedAt() {
