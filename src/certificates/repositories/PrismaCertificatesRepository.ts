@@ -11,7 +11,15 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
   async create(certificate: Certificate): Promise<void> {
     const prismaCertificate = CertificateMapper.toPrisma(certificate);
     await this.prismaService.certificate.create({
-      data: prismaCertificate,
+      data: {
+        ...prismaCertificate.certificate,
+        documents: {
+          createMany: {
+            data: prismaCertificate.documents,
+            skipDuplicates: true,
+          },
+        },
+      },
     });
   }
 
@@ -20,13 +28,16 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
       where: {
         id,
       },
+      include: {
+        documents: true,
+      },
     });
 
     if (!certificate) {
       return null;
     }
 
-    return CertificateMapper.toDomain(certificate);
+    return CertificateMapper.toDomain(certificate, certificate.documents);
   }
   fetchAll(): Promise<Certificate[]> {
     throw new Error('Method not implemented.');
