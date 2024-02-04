@@ -34,7 +34,7 @@ export class CertificatesController {
   @Get(':id/generate')
   async generateOne(
     @Param('id') id: string,
-    @Query() query: { [key: string]: string },
+    @Query() query: { document: string; [key: string]: string },
   ) {
     const generatedCertificateContent = await this.certificatesService.generate(
       id,
