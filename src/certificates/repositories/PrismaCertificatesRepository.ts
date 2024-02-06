@@ -23,6 +23,19 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
     });
   }
 
+  async save(certificate: Certificate): Promise<void> {
+    const prismaCertificate = CertificateMapper.toPrisma(certificate);
+    // TODO - Fix update documents on prisma repository
+    await this.prismaService.certificate.update({
+      where: {
+        id: prismaCertificate.certificate.id,
+      },
+      data: {
+        ...prismaCertificate.certificate,
+      },
+    });
+  }
+
   async findById(id: string): Promise<Certificate | null> {
     const certificate = await this.prismaService.certificate.findFirst({
       where: {

@@ -3,6 +3,8 @@ import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { Certificate } from './entities/certificate.entity';
 import { CertificatesRepository } from './repositories/CertificatesRepository';
+import { AddDocumentsToCertificateDto } from './dto/add-documents-to-certificate-dto';
+import { Document } from './entities/document.entity';
 
 interface GenerateContentVariables {
   document: string;
@@ -28,12 +30,46 @@ export class CertificatesService {
     return certificate;
   }
 
+  async addDocuments(
+    id: string,
+    addDocumentsToCertificateDto: AddDocumentsToCertificateDto,
+  ) {
+    const certificate = await this.certificatesRepository.findById(id);
+
+    if (!certificate) {
+      throw new Error('Certificate not found.');
+    }
+
+    const documentsToBeAdded = addDocumentsToCertificateDto.documents.map(
+      (document) => new Document(document),
+    );
+    certificate.setDocuments([
+      ...certificate.getDocuments(),
+      ...documentsToBeAdded,
+    ]);
+
+    return this.certificatesRepository.save(certificate);
+  }
+
   findAll() {
     return `This action returns all certificates`;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} certificate`;
+  async findOne(id: string) {
+    const certificate = await this.certificatesRepository.findById(id);
+
+    if (!certificate) {
+      throw new Error('Certificate not found.');
+    }
+    return {
+      id: certificate.getId(),
+      title: certificate.getTitle(),
+      content: certificate.getContent(),
+      initialDate: certificate.getInitialDate(),
+      endDate: certificate.getEndDate() ? certificate.getEndDate() : undefined,
+      hours: certificate.getHours(),
+      documents: certificate.getDocuments(),
+    };
   }
 
   async generate(id: string, variables: GenerateContentVariables) {

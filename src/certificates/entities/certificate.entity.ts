@@ -67,12 +67,21 @@ export class Certificate {
     return this.documents;
   }
 
+  setDocuments(documents: Document[]) {
+    this.documents = documents;
+    this.update();
+  }
+
   getCreatedAt() {
     return this.createdAt;
   }
 
   getUpdatedAt() {
     return this.updatedAt;
+  }
+
+  private update() {
+    this.updatedAt = new Date();
   }
 
   resolveContent(

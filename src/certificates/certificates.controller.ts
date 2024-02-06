@@ -11,6 +11,7 @@ import {
 import { CertificatesService } from './certificates.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
+import { AddDocumentsToCertificateDto } from './dto/add-documents-to-certificate-dto';
 
 @Controller('certificates')
 export class CertificatesController {
@@ -19,6 +20,17 @@ export class CertificatesController {
   @Post()
   create(@Body() createCertificateDto: CreateCertificateDto) {
     return this.certificatesService.create(createCertificateDto);
+  }
+
+  @Post(':id/documents')
+  addDocuments(
+    @Param('id') id: string,
+    @Body() addDocumentsToCertificateDto: AddDocumentsToCertificateDto,
+  ) {
+    return this.certificatesService.addDocuments(
+      id,
+      addDocumentsToCertificateDto,
+    );
   }
 
   @Get()
