@@ -20,7 +20,7 @@ model Certificate {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  documents DocumentsOnCertificates[]
+  documents Document[]
 
   @@map("certificates")
 }
@@ -28,18 +28,7 @@ model Certificate {
 model Document {
   identifier String @id
 
-  certificates DocumentsOnCertificates[]
+  certificates Certificate[]
 
   @@map("documents")
-}
-
-model DocumentsOnCertificates {
-  certificateId      String
-  documentIdentifier String
-
-  Certificate Certificate @relation(fields: [certificateId], references: [id])
-  Document    Document    @relation(fields: [documentIdentifier], references: [identifier])
-
-  @@id([certificateId, documentIdentifier])
-  @@map("documents_on_certificates")
 }
