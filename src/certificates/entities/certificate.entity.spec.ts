@@ -63,4 +63,61 @@ describe('Certificate', () => {
       ),
     ).toThrow("End date can't be after the initial date.");
   });
+
+  it.each([-1, 0])(
+    'should not be able to create a certificate with a invalid hour number',
+    (value) => {
+      expect(() =>
+        Certificate.create('title', 'content', new Date(), undefined, value),
+      ).toThrow('Hours cannot be less than 1.');
+    },
+  );
+
+  it('should not be able to set the initial date of a certificate with a date after the end date', () => {
+    const currentDate = new Date();
+
+    const certificate = Certificate.create(
+      'new certificate',
+      'content',
+      new Date(),
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        currentDate.getDate(),
+      ),
+      4,
+    );
+
+    expect(() =>
+      certificate.setInitialDate(
+        new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 2,
+          currentDate.getDate(),
+        ),
+      ),
+    ).toThrow();
+  });
+
+  it('should not be able to set the end date of a certificate with a date before the initial date', () => {
+    const currentDate = new Date();
+
+    const certificate = Certificate.create(
+      'new certificate',
+      'content',
+      new Date(),
+      undefined,
+      4,
+    );
+
+    expect(() =>
+      certificate.setEndDate(
+        new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate(),
+        ),
+      ),
+    ).toThrow();
+  });
 });
