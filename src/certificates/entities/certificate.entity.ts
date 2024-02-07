@@ -31,6 +31,10 @@ export class Certificate {
       throw new Error("End date can't be after the initial date.");
     }
 
+    if (!this.isHoursValid(hours)) {
+      throw new Error('Hours cannot be less than 1.');
+    }
+
     return new Certificate(
       id,
       title,
@@ -52,20 +56,53 @@ export class Certificate {
     return this.title;
   }
 
+  setTitle(value: string) {
+    this.title = value;
+    this.update();
+  }
+
   getContent() {
     return this.content;
+  }
+
+  setContent(value: string) {
+    this.content = value;
+    this.update();
   }
 
   getInitialDate() {
     return this.initialDate;
   }
 
+  setInitialDate(date: Date) {
+    if (!Certificate.isPeriodValid(date, this.endDate)) {
+      throw new Error('Initial date cannot be after end date.');
+    }
+
+    this.initialDate = date;
+    this.update();
+  }
+
   getEndDate() {
     return this.endDate;
   }
 
+  setEndDate(date: Date | undefined) {
+    if (!Certificate.isPeriodValid(this.initialDate, date)) {
+      throw new Error('End date cannot be before initial date.');
+    }
+
+    this.endDate = date;
+    this.update();
+  }
+
   getHours() {
     return this.hours;
+  }
+
+  setHours(value: number) {
+    this.hours = value;
+    this.update();
   }
 
   getDocuments() {
@@ -116,6 +153,14 @@ export class Certificate {
 
   static isPeriodValid(initialDate: Date, endDate?: Date): boolean {
     if (endDate && moment(endDate).isBefore(initialDate)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  static isHoursValid(hours: number) {
+    if (hours <= 0) {
       return false;
     }
 
