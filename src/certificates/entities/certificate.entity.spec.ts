@@ -2,11 +2,17 @@ import { Certificate } from './certificate.entity';
 
 describe('Certificate', () => {
   it('should be able to create a new certificate', () => {
+    const currentDate = new Date();
+
     const certificate = Certificate.create(
       'new certificate',
       'content',
       new Date(),
-      undefined,
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        currentDate.getDate(),
+      ),
       4,
     );
 
@@ -38,5 +44,23 @@ describe('Certificate', () => {
     expect(() => certificate.resolveContent()).toThrow(
       'Some required content variables are undefined: name',
     );
+  });
+
+  it('should not be able to create a certificate with the given end date after the given initial date', () => {
+    const currentDate = new Date();
+
+    expect(() =>
+      Certificate.create(
+        'new certificate',
+        'My name is [[name]]',
+        currentDate,
+        new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate(),
+        ),
+        4,
+      ),
+    ).toThrow("End date can't be after the initial date.");
   });
 });
