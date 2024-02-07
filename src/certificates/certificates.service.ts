@@ -3,7 +3,7 @@ import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { Certificate } from './entities/certificate.entity';
 import { CertificatesRepository } from './repositories/CertificatesRepository';
-import { AddDocumentsToCertificateDto } from './dto/add-documents-to-certificate-dto';
+import { SetDocumentsToCertificateDto } from './dto/set-documents-to-certificate-dto';
 import { Document } from './entities/document.entity';
 
 interface GenerateContentVariables {
@@ -30,9 +30,9 @@ export class CertificatesService {
     return certificate;
   }
 
-  async addDocuments(
+  async setDocuments(
     id: string,
-    addDocumentsToCertificateDto: AddDocumentsToCertificateDto,
+    setDocumentsToCertificateDto: SetDocumentsToCertificateDto,
   ) {
     const certificate = await this.certificatesRepository.findById(id);
 
@@ -40,13 +40,10 @@ export class CertificatesService {
       throw new Error('Certificate not found.');
     }
 
-    const documentsToBeAdded = addDocumentsToCertificateDto.documents.map(
+    const documentsToBeAdded = setDocumentsToCertificateDto.documents.map(
       (document) => new Document(document),
     );
-    certificate.setDocuments([
-      ...certificate.getDocuments(),
-      ...documentsToBeAdded,
-    ]);
+    certificate.setDocuments([...documentsToBeAdded]);
 
     return this.certificatesRepository.save(certificate);
   }

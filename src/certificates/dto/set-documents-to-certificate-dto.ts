@@ -1,3 +1,3 @@
-export class AddDocumentsToCertificateDto {
+export class SetDocumentsToCertificateDto {
   constructor(readonly documents: string[]) {}
 }

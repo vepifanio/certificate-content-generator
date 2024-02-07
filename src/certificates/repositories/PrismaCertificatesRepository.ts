@@ -32,7 +32,7 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
         data: {
           ...prismaCertificate.certificate,
           documents: {
-            connect: prismaCertificate.documents,
+            set: prismaCertificate.documents,
           },
         },
         include: {
