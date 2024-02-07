@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Document } from './document.entity';
+import * as moment from 'moment';
 
 export class Certificate {
   constructor(
@@ -25,6 +26,10 @@ export class Certificate {
     const createdAt = new Date();
     const updatedAt = new Date();
     const documents: Document[] = [];
+
+    if (!this.isPeriodValid(initialDate, endDate)) {
+      throw new Error("End date can't be after the initial date.");
+    }
 
     return new Certificate(
       id,
@@ -107,5 +112,13 @@ export class Certificate {
     }
 
     return contentTextResolved;
+  }
+
+  static isPeriodValid(initialDate: Date, endDate?: Date): boolean {
+    if (endDate && moment(endDate).isBefore(initialDate)) {
+      return false;
+    }
+
+    return true;
   }
 }
