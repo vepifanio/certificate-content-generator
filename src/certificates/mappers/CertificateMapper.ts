@@ -1,20 +1,19 @@
 import { Certificate } from '../entities/certificate.entity';
 import {
   Certificate as PrismaCertificate,
-  DocumentsOnCertificates,
+  Document as PrismaDocument,
 } from '@prisma/client';
 import { Document } from '../entities/document.entity';
 
 export class CertificateMapper {
   static toPrisma(certificate: Certificate): {
     certificate: PrismaCertificate;
-    documents: DocumentsOnCertificates[];
+    documents: PrismaDocument[];
   } {
-    const documents: DocumentsOnCertificates[] = certificate
+    const documents: PrismaDocument[] = certificate
       .getDocuments()
       .map((document) => ({
-        certificateId: certificate.getId(),
-        documentIdentifier: document.getIdentifier(),
+        identifier: document.getIdentifier(),
       }));
 
     return {
@@ -36,7 +35,7 @@ export class CertificateMapper {
 
   static toDomain(
     prismaCertificate: PrismaCertificate,
-    documents: DocumentsOnCertificates[],
+    documents: PrismaDocument[],
   ): Certificate {
     const {
       id,
@@ -50,7 +49,7 @@ export class CertificateMapper {
     } = prismaCertificate;
 
     const certificateDocuments = documents.map(
-      (document) => new Document(document.documentIdentifier),
+      (document) => new Document(document.identifier),
     );
 
     return new Certificate(

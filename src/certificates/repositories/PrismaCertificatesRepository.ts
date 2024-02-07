@@ -13,27 +13,33 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
     await this.prismaService.certificate.create({
       data: {
         ...prismaCertificate.certificate,
-        documents: {
-          createMany: {
-            data: prismaCertificate.documents,
-            skipDuplicates: true,
-          },
-        },
       },
     });
   }
 
   async save(certificate: Certificate): Promise<void> {
     const prismaCertificate = CertificateMapper.toPrisma(certificate);
-    // TODO - Fix update documents on prisma repository
-    await this.prismaService.certificate.update({
-      where: {
-        id: prismaCertificate.certificate.id,
-      },
-      data: {
-        ...prismaCertificate.certificate,
-      },
-    });
+
+    await this.prismaService.$transaction([
+      this.prismaService.document.createMany({
+        data: prismaCertificate.documents,
+        skipDuplicates: true,
+      }),
+      this.prismaService.certificate.update({
+        where: {
+          id: prismaCertificate.certificate.id,
+        },
+        data: {
+          ...prismaCertificate.certificate,
+          documents: {
+            connect: prismaCertificate.documents,
+          },
+        },
+        include: {
+          documents: true,
+        },
+      }),
+    ]);
   }
 
   async findById(id: string): Promise<Certificate | null> {
