@@ -89,8 +89,27 @@ export class CertificatesService {
     return generatedContent;
   }
 
-  update(id: string, updateCertificateDto: UpdateCertificateDto) {
-    return `This action updates a #${id} certificate`;
+  async update(id: string, updateCertificateDto: UpdateCertificateDto) {
+    const { title, content, hours, initialDate, endDate } =
+      updateCertificateDto;
+
+    const certificate = await this.certificatesRepository.findById(id);
+
+    if (!certificate) {
+      throw new Error('Certificate not found.');
+    }
+
+    title && certificate.setTitle(title);
+    content && certificate.setContent(content);
+    hours && certificate.setHours(hours);
+    initialDate && certificate.setInitialDate(initialDate);
+    endDate && certificate.setEndDate(endDate);
+
+    await this.certificatesRepository.save(certificate);
+
+    return {
+      certificate,
+    };
   }
 
   remove(id: number) {
