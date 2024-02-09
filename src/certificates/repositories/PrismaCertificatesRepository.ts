@@ -58,7 +58,21 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
 
     return CertificateMapper.toDomain(certificate, certificate.documents);
   }
-  fetchAll(): Promise<Certificate[]> {
-    throw new Error('Method not implemented.');
+
+  async fetchAll(): Promise<Certificate[]> {
+    const prismaCertificates = await this.prismaService.certificate.findMany({
+      include: {
+        documents: true,
+      },
+    });
+
+    const certificates = prismaCertificates.map((prismaCertificate) =>
+      CertificateMapper.toDomain(
+        prismaCertificate,
+        prismaCertificate.documents,
+      ),
+    );
+
+    return certificates;
   }
 }
