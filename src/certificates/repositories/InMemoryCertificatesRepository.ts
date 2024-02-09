@@ -4,15 +4,22 @@ import { CertificatesRepository } from './CertificatesRepository';
 export class InMemoryCertificatesRepository implements CertificatesRepository {
   public items: Certificate[] = [];
 
-  create(certificate: Certificate): Promise<void> {
-    throw new Error('Method not implemented.');
+  async create(certificate: Certificate): Promise<void> {
+    this.items.push(certificate);
   }
-  save(certificate: Certificate): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async save(certificate: Certificate): Promise<void> {
+    const certificateIdx = this.items.findIndex(
+      (item) => item.getId() === certificate.getId(),
+    );
+
+    this.items[certificateIdx] = certificate;
   }
-  findById(id: string): Promise<Certificate> {
-    throw new Error('Method not implemented.');
+
+  async findById(id: string): Promise<Certificate | null> {
+    return this.items.find((item) => item.getId() === id) || null;
   }
+
   async fetchAll(): Promise<Certificate[]> {
     return this.items;
   }
