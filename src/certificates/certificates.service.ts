@@ -48,8 +48,9 @@ export class CertificatesService {
     return this.certificatesRepository.save(certificate);
   }
 
-  findAll() {
-    return `This action returns all certificates`;
+  async findAll() {
+    const certificates = await this.certificatesRepository.fetchAll();
+    return certificates;
   }
 
   async findOne(id: string) {

@@ -34,8 +34,11 @@ export class CertificatesController {
   }
 
   @Get()
-  findAll() {
-    return this.certificatesService.findAll();
+  async findAll() {
+    const certificates = await this.certificatesService.findAll();
+    return {
+      certificates,
+    };
   }
 
   @Get(':id')
