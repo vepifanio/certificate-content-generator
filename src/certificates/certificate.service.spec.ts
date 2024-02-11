@@ -60,6 +60,28 @@ describe('Certificates controller', () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should be able to find a previously created certificate', async () => {
+      certificatesRepository.items.push(defaultCertificate);
+
+      const searchedCertificate = await certificatesController.findOne(
+        defaultCertificate.getId(),
+      );
+
+      expect(searchedCertificate).toEqual(
+        expect.objectContaining({
+          id: defaultCertificate.getId(),
+        }),
+      );
+    });
+
+    it('should not be able to find a non created certificate', async () => {
+      await expect(() =>
+        certificatesController.findOne('non-existent-id'),
+      ).rejects.toThrow(new Error('Certificate not found.'));
+    });
+  });
+
   describe('findAll', () => {
     it('should be able to list all certificates', async () => {
       certificatesRepository.items.push(defaultCertificate);
