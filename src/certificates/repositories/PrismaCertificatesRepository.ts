@@ -75,4 +75,12 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
 
     return certificates;
   }
+
+  async delete(certificate: Certificate): Promise<void> {
+    await this.prismaService.certificate.delete({
+      where: {
+        id: certificate.getId(),
+      },
+    });
+  }
 }
