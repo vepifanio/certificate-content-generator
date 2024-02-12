@@ -167,9 +167,12 @@ describe('Certificates controller', () => {
     it('should be able to remove a certificate', async () => {
       certificatesRepository.items.push(defaultCertificate);
 
-      await certificatesController.remove(defaultCertificate.getId());
+      const result = await certificatesController.remove(
+        defaultCertificate.getId(),
+      );
 
       expect(certificatesRepository.items).toHaveLength(0);
+      expect(result.deleted).toBe(defaultCertificate.getId());
     });
 
     it('should not be able to remove a non-existent certificate', async () => {
