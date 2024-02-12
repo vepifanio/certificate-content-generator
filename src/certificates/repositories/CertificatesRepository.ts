@@ -5,4 +5,5 @@ export abstract class CertificatesRepository {
   abstract save(certificate: Certificate): Promise<void>;
   abstract findById(id: string): Promise<Certificate | null>;
   abstract fetchAll(): Promise<Certificate[]>;
+  abstract delete(certificate: Certificate): Promise<void>;
 }

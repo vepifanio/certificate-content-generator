@@ -71,6 +71,6 @@ export class CertificatesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.certificatesService.remove(+id);
+    return this.certificatesService.remove(id);
   }
 }

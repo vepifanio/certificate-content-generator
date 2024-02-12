@@ -113,7 +113,14 @@ export class CertificatesService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} certificate`;
+  async remove(id: string) {
+    const certificate = await this.certificatesRepository.findById(id);
+    if (!certificate) {
+      throw new Error('Certificate not found.');
+    }
+
+    await this.certificatesRepository.delete(certificate);
+
+    return id;
   }
 }
