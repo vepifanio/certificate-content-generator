@@ -70,7 +70,10 @@ export class CertificatesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.certificatesService.remove(id);
+  async remove(@Param('id') id: string) {
+    const deleted = await this.certificatesService.remove(id);
+    return {
+      deleted,
+    };
   }
 }
