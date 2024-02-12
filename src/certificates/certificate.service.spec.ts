@@ -162,4 +162,20 @@ describe('Certificates controller', () => {
       ).rejects.toThrow(new Error('Certificate not found.'));
     });
   });
+
+  describe('remove', () => {
+    it('should be able to remove a certificate', async () => {
+      certificatesRepository.items.push(defaultCertificate);
+
+      await certificatesController.remove(defaultCertificate.getId());
+
+      expect(certificatesRepository.items).toHaveLength(0);
+    });
+
+    it('should not be able to remove a non-existent certificate', async () => {
+      await expect(() =>
+        certificatesController.remove('non-existent-id'),
+      ).rejects.toThrow(new Error('Certificate not found.'));
+    });
+  });
 });

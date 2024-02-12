@@ -23,4 +23,12 @@ export class InMemoryCertificatesRepository implements CertificatesRepository {
   async fetchAll(): Promise<Certificate[]> {
     return this.items;
   }
+
+  async delete(certificate: Certificate): Promise<void> {
+    const updatedItems = this.items.filter(
+      (item) => item.getId() !== certificate.getId(),
+    );
+
+    this.items = updatedItems;
+  }
 }
