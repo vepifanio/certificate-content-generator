@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CertificatesRepository } from '../repositories/CertificatesRepository';
-
-interface GenerateContentVariables {
-  document: string;
-  [key: string]: string;
-}
+import { GenerateCertificateContentDto } from '../dto/generate-certificate-content.dto';
 
 @Injectable()
 export class GenerateCertificateContentService {
   constructor(private certificatesRepository: CertificatesRepository) {}
 
-  async execute(id: string, variables: GenerateContentVariables) {
+  async execute(
+    id: string,
+    generateCertificateContentDto: GenerateCertificateContentDto,
+  ) {
     const certificate = await this.certificatesRepository.findById(id);
-    const { document } = variables;
+    const { document, variables } = generateCertificateContentDto;
 
     if (!certificate) {
       throw new Error('Certificate not found.');
