@@ -40,6 +40,10 @@ describe('Generate certificate content', () => {
     certificatesRepository.items.push(certificate);
     const content = await sut.execute(certificate.getId(), {
       document: '12345678909',
+      variables: {
+        name: 'test',
+        age: 'age test',
+      },
     });
 
     expect(content).toEqual(expect.any(String));
