@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
@@ -18,6 +19,7 @@ import { FindAllCertificatesService } from './services/find-all-certificates.ser
 import { UpdateCertificateService } from './services/update-certificate.service';
 import { RemoveCertificateService } from './services/remove-certificate.service';
 import { GenerateCertificateContentService } from './services/generate-certificate-content.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('certificates')
 export class CertificatesController {
@@ -31,6 +33,7 @@ export class CertificatesController {
     private readonly generateCertificateContentService: GenerateCertificateContentService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createCertificateDto: CreateCertificateDto) {
     return this.createCertificateService.execute(createCertificateDto);
