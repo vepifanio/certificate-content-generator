@@ -39,6 +39,7 @@ export class CertificatesController {
     return this.createCertificateService.execute(createCertificateDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/documents')
   setDocuments(
     @Param('id') id: string,
@@ -58,6 +59,7 @@ export class CertificatesController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.findOneCertificateService.execute(id);
@@ -76,6 +78,7 @@ export class CertificatesController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -84,6 +87,7 @@ export class CertificatesController {
     return this.updateCertificateService.execute(id, updateCertificateDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const deleted = await this.removeCertificateService.execute(id);
