@@ -51,6 +51,7 @@ export class CertificatesController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     const certificates = await this.findAllCertificatesService.execute();
