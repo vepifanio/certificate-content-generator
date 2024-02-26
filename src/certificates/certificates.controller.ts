@@ -20,6 +20,7 @@ import { UpdateCertificateService } from './services/update-certificate.service'
 import { RemoveCertificateService } from './services/remove-certificate.service';
 import { GenerateCertificateContentService } from './services/generate-certificate-content.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FindAllCertificatesDto } from './dto/find-all-certificates.dto';
 
 @Controller('certificates')
 export class CertificatesController {
@@ -53,8 +54,10 @@ export class CertificatesController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
-    const certificates = await this.findAllCertificatesService.execute();
+  async findAll(@Query() findAllCertificatesDto: FindAllCertificatesDto) {
+    const certificates = await this.findAllCertificatesService.execute(
+      findAllCertificatesDto,
+    );
     return {
       certificates,
     };

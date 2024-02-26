@@ -20,8 +20,11 @@ export class InMemoryCertificatesRepository implements CertificatesRepository {
     return this.items.find((item) => item.getId() === id) || null;
   }
 
-  async fetchAll(): Promise<Certificate[]> {
-    return this.items;
+  async fetchAll({ page }: { page: number }): Promise<Certificate[]> {
+    const ITEMS_PER_PAGE = 10;
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    return this.items.slice(start, end);
   }
 
   async delete(certificate: Certificate): Promise<void> {

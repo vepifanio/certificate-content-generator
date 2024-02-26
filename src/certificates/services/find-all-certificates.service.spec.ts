@@ -43,4 +43,30 @@ describe('Find all certificates', () => {
       }),
     ]);
   });
+
+  it('should be able to list all certificates with pagination', async () => {
+    for (let i = 0; i < 13; i++) {
+      certificatesRepository.items.push(certificateFactory());
+    }
+
+    const result = await sut.execute();
+    expect(result.length).toBe(10);
+
+    const pageTwoResult = await sut.execute({ page: 2 });
+    expect(pageTwoResult.length).toBe(3);
+  });
+
+  it('should be able to return the first page of results if a negative number is received', async () => {
+    certificatesRepository.items.push(defaultCertificate);
+    const result = await sut.execute({ page: -1 });
+
+    expect(result.length).toBe(1);
+  });
+
+  it('should be able to return a empty list of results if the actual page number is smaller than the page number received', async () => {
+    certificatesRepository.items.push(defaultCertificate);
+    const result = await sut.execute({ page: 2 });
+
+    expect(result.length).toBe(0);
+  });
 });

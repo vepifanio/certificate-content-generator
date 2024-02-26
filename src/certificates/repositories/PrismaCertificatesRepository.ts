@@ -59,11 +59,15 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
     return CertificateMapper.toDomain(certificate, certificate.documents);
   }
 
-  async fetchAll(): Promise<Certificate[]> {
+  async fetchAll({ page }: { page: number }): Promise<Certificate[]> {
+    const ITEMS_PER_PAGE = 10;
+
     const prismaCertificates = await this.prismaService.certificate.findMany({
       include: {
         documents: true,
       },
+      take: ITEMS_PER_PAGE,
+      skip: (page - 1) * ITEMS_PER_PAGE,
     });
 
     const certificates = prismaCertificates.map((prismaCertificate) =>
