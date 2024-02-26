@@ -19,7 +19,7 @@ import { FindAllCertificatesService } from './services/find-all-certificates.ser
 import { UpdateCertificateService } from './services/update-certificate.service';
 import { RemoveCertificateService } from './services/remove-certificate.service';
 import { GenerateCertificateContentService } from './services/generate-certificate-content.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('certificates')
 export class CertificatesController {
