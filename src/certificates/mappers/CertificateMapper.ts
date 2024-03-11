@@ -8,7 +8,7 @@ import { Document } from '../entities/document.entity';
 export class CertificateMapper {
   static toPrisma(certificate: Certificate): {
     certificate: PrismaCertificate;
-    documents: PrismaDocument[];
+    documents?: PrismaDocument[];
   } {
     const documents: PrismaDocument[] = certificate
       .getDocuments()

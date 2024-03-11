@@ -8,6 +8,7 @@ import { FindAllCertificatesService } from './services/find-all-certificates.ser
 import { UpdateCertificateService } from './services/update-certificate.service';
 import { RemoveCertificateService } from './services/remove-certificate.service';
 import { GenerateCertificateContentService } from './services/generate-certificate-content.service';
+import { FindCertificatesByDocumentService } from './services/find-certificates-by-document.service';
 
 @Module({
   imports: [PrismaModule],
@@ -17,9 +18,11 @@ import { GenerateCertificateContentService } from './services/generate-certifica
     SetCertificateDocumentsService,
     FindOneCertificateService,
     FindAllCertificatesService,
+    FindCertificatesByDocumentService,
     UpdateCertificateService,
     RemoveCertificateService,
     GenerateCertificateContentService,
   ],
+  exports: [FindCertificatesByDocumentService],
 })
 export class CertificatesModule {}

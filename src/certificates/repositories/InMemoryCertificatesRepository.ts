@@ -27,6 +27,22 @@ export class InMemoryCertificatesRepository implements CertificatesRepository {
     return this.items.slice(start, end);
   }
 
+  async fetchAllByDocument({
+    document,
+    page,
+  }: {
+    document: string;
+    page: number;
+  }): Promise<Certificate[]> {
+    const ITEMS_PER_PAGE = 10;
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const filteredItems = this.items.filter((item) =>
+      item.getDocuments().find((doc) => doc.getIdentifier() === document),
+    );
+    return filteredItems.slice(start, end);
+  }
+
   async delete(certificate: Certificate): Promise<void> {
     const updatedItems = this.items.filter(
       (item) => item.getId() !== certificate.getId(),

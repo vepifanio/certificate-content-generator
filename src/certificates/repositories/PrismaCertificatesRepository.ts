@@ -80,6 +80,40 @@ export class PrismaCertificatesRepository implements CertificatesRepository {
     return certificates;
   }
 
+  async fetchAllByDocument({
+    document,
+    page,
+  }: {
+    document: string;
+    page: number;
+  }): Promise<Certificate[]> {
+    const ITEMS_PER_PAGE = 10;
+
+    const prismaCertificates = await this.prismaService.certificate.findMany({
+      where: {
+        documents: {
+          some: {
+            identifier: document,
+          },
+        },
+      },
+      include: {
+        documents: true,
+      },
+      take: ITEMS_PER_PAGE,
+      skip: (page - 1) * ITEMS_PER_PAGE,
+    });
+
+    const certificates = prismaCertificates.map((prismaCertificate) =>
+      CertificateMapper.toDomain(
+        prismaCertificate,
+        prismaCertificate.documents,
+      ),
+    );
+
+    return certificates;
+  }
+
   async delete(certificate: Certificate): Promise<void> {
     await this.prismaService.certificate.delete({
       where: {
