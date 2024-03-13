@@ -129,6 +129,7 @@ export class Certificate {
   resolveContent(
     contentVariables: { [key: string]: string | number } = {},
   ): string {
+    console.log(contentVariables);
     const contentTextResolved = Object.keys(contentVariables).reduce(
       (text, key) => {
         return text.replace(`[[${key}]]`, String(contentVariables[key]));

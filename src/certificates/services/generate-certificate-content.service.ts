@@ -11,7 +11,7 @@ export class GenerateCertificateContentService {
     generateCertificateContentDto: GenerateCertificateContentDto,
   ) {
     const certificate = await this.certificatesRepository.findById(id);
-    const { document, variables } = generateCertificateContentDto;
+    const { document } = generateCertificateContentDto;
 
     if (!certificate) {
       throw new Error('Certificate not found.');
@@ -25,7 +25,25 @@ export class GenerateCertificateContentService {
       throw new Error('Document not allowed to generate this certificate.');
     }
 
-    const generatedContent = certificate.resolveContent(variables);
+    const variablesToResolve: { [key: string]: string | number } = Object.keys(
+      generateCertificateContentDto,
+    ).reduce((obj, key) => {
+      if (key === 'document') {
+        return {
+          ...obj,
+          document: generateCertificateContentDto[key].replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            '$1.$2.$3-$4',
+          ),
+        };
+      }
+
+      return {
+        ...obj,
+        [key]: generateCertificateContentDto[key],
+      };
+    }, {});
+    const generatedContent = certificate.resolveContent(variablesToResolve);
     return generatedContent;
   }
 }
